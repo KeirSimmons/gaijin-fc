@@ -9,6 +9,7 @@ import streamlit as st
 from games import Games
 from metrics import Assists, GamesMetric, Goals
 from players import Players
+from repo import Repo
 
 
 class Main:
@@ -94,6 +95,9 @@ class Main:
             ]
         )
         st.plotly_chart(fig)
+
+        if st.button("Save changes?"):
+            Repo()
 
 
 if __name__ == "__main__":
