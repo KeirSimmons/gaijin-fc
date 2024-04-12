@@ -38,7 +38,7 @@ class Repo:
     def commit(self):
         with st.spinner(text="Committing all changes.."):
             repo = self.repo
-            commit_message = "Automated commit"
+            commit_message = "Automated commit from app interaction"
             master_ref = repo.get_git_ref("heads/main")
             master_sha = master_ref.object.sha
             base_tree = repo.get_git_tree(master_sha)
