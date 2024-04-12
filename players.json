@@ -1,0 +1,23 @@
+{
+    "Keir": {
+        "initial_metrics": {
+            "assists": 34,
+            "games": 0,
+            "goals": 64
+        }
+    },
+    "Liam": {
+        "initial_metrics": {
+            "assists": 32,
+            "games": 0,
+            "goals": 35
+        }
+    },
+    "Rory": {
+        "initial_metrics": {
+            "assists": 18,
+            "games": 0,
+            "goals": 39
+        }
+    }
+}
