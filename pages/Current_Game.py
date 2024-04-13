@@ -3,7 +3,7 @@ from collections import defaultdict
 import streamlit as st
 
 from games import Games
-from metrics import Assists, Goals
+from metrics import Assists, ConcededMetric, DisciplinaryMetric, Goals, MOTMMetric
 from players import Players
 from venues import Venues
 
@@ -47,7 +47,13 @@ class CurrentGamePage:
             for player in self.players.get_data():
                 form_data["players"][player] = {}
                 with st.expander(player, expanded=True):
-                    for metric in [Goals, Assists]:
+                    for metric in [
+                        Goals,
+                        Assists,
+                        MOTMMetric,
+                        ConcededMetric,
+                        DisciplinaryMetric,
+                    ]:
                         form_data["players"][player][metric.KEY] = st.number_input(
                             metric.MATCH_LABEL,
                             key=f"{player}-{metric.KEY}",
