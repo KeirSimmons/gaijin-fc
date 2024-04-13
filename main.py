@@ -17,6 +17,7 @@ from metrics import (
     MOTMMetric,
 )
 from players import Players
+from promotions import Promotions
 from repo import Repo
 
 
@@ -143,33 +144,12 @@ class Main:
         )
         st.plotly_chart(fig)
 
-        self.promotions(sum([val for val in data["Points"].values()]))
+        # Display a progress bar for the next promotion
+        points = sum([val for val in data["Points"].values()])
+        Promotions(points).display_progress_bar()
 
         if st.button("Save changes?"):
             Repo()
-
-    def promotions(self, points):
-        promos = [["celtic", 0], ["rangers", 100], ["brighton", 250]]
-        if len(promos) < 2 or promos[0][1] > 0:
-            st.exception("Promotion data not sufficient.")
-        current_level = None
-        next_level = None
-        for team, point_requirement in promos:
-            if points >= point_requirement:
-                current_level = [team, point_requirement]
-            else:
-                next_level = [team, point_requirement]
-                break
-
-        zero_level = current_level[1]
-        max_level = next_level[1]
-
-        progress = (points - zero_level) / (max_level - zero_level)
-
-        st.progress(
-            progress,
-            text=f"{points} / {point_requirement} points - next promotion: {next_level[0]}",
-        )
 
 
 if __name__ == "__main__":
