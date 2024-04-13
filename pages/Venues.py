@@ -18,21 +18,17 @@ class VenuesPage:
         if "venue-added" in st.session_state:
             st.success(f"New venue added ({st.session_state['venue-added']})")
             repo = Repo()
-            repo.commit(
-                f"Added a new venue ({st.session_state['venue-added']})", auto=False
-            )
+            repo.commit(f"Added a new venue ({st.session_state['venue-added']})")
             del st.session_state["venue-added"]
         if "venue-deleted" in st.session_state:
             st.success("Venue deleted successfully")
             repo = Repo()
-            repo.commit(
-                f"Deleted venue {st.session_state['venue-deleted']}", auto=False
-            )
+            repo.commit(f"Deleted venue {st.session_state['venue-deleted']}")
             del st.session_state["venue-deleted"]
         if "venue-edited" in st.session_state:
             st.success("Venue edited successfully")
             repo = Repo()
-            repo.commit(f"Edited venue {st.session_state['venue-edited']}", auto=False)
+            repo.commit(f"Edited venue {st.session_state['venue-edited']}")
             del st.session_state["venue-edited"]
         self.render_edit_form()
         self.render_add_form()

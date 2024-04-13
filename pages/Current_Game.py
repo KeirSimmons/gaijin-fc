@@ -37,21 +37,17 @@ class CurrentGamePage:
                     if venue
                     else "Kicking off a new game"
                 ),
-                auto=False,
             )
             del st.session_state["new_game_created"]
 
         if "game_completed" in st.session_state:
             st.success(f"Game completed!")
-            self.repo.commit(
-                f"Finalising the game after all matches completed", auto=False
-            )
+            self.repo.commit(f"Finalising the game after all matches completed")
             del st.session_state["game_completed"]
 
         if "match_added" in st.session_state:
             self.repo.commit(
                 f"Adding scores for a single match (#{st.session_state['match_added']})",
-                auto=False,
             )
             del st.session_state["match_added"]
 
