@@ -40,11 +40,15 @@ class Repo:
                 files.append(fh)
         self.files = files
 
-    def commit(self):
+    def commit(self, msg=None):
         with st.spinner(text="Committing all changes.."):
             repo = self.repo
             username = self.login.get_user()
-            commit_message = f"Automated commit from app interaction ({username})"
+
+            if msg is None:
+                commit_message = f"{username}: Automated commit from app interaction"
+            else:
+                commit_message = f"{username}: {msg} (Automated commit)"
             master_ref = repo.get_git_ref("heads/main")
             master_sha = master_ref.object.sha
             base_tree = repo.get_git_tree(master_sha)
