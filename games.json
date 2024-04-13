@@ -1,1 +1,16 @@
-{}
+{
+    "game-1": {
+        "created": 1713003379.4706652,
+        "date": "2024-04-13",
+        "duration": 7,
+        "matches": [],
+        "no_of_matches": 8,
+        "ongoing": true,
+        "players": [
+            "Keir",
+            "Liam",
+            "Rory"
+        ],
+        "venue": "venue-1"
+    }
+}
