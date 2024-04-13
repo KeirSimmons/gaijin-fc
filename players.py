@@ -45,7 +45,7 @@ class Players:
         return self.data[player].get(attr)
 
     def get_initial_metric(self, player, metric):
-        return self.get(player, "initial_metrics").get(metric)
+        return self.get(player, "initial_metrics").get(metric) or 0
 
     def get_data(self):
         return self.data
