@@ -3,6 +3,7 @@ from collections import defaultdict
 import streamlit as st
 
 from games import Games
+from login import Login
 from metrics import Assists, ConcededMetric, DisciplinaryMetric, Goals, MOTMMetric
 from players import Players
 from venues import Venues
@@ -10,6 +11,9 @@ from venues import Venues
 
 class CurrentGamePage:
     def __init__(self):
+        self.login = Login()
+        self.login.authentication()
+
         self.games = Games()
         self.venues = Venues()
         self.players = Players()

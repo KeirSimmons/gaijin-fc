@@ -1,12 +1,15 @@
 import streamlit as st
 
+from login import Login
 from venues import Venues
 
 
 class VenuesPage:
     def __init__(self):
-        self.venues = Venues()
+        self.login = Login()
+        self.login.authentication()
 
+        self.venues = Venues()
         self.render()
 
     def render(self):

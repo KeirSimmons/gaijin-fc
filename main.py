@@ -7,6 +7,7 @@ import plotly.graph_objects as go
 import streamlit as st
 
 from games import Games
+from login import Login
 from metrics import (
     Assists,
     ConcededMetric,
@@ -32,6 +33,9 @@ class Main:
 
     def __init__(self):
         st.set_page_config(page_title="Main")
+        self.login = Login()
+        self.login.authentication()
+
         self.players = Players()
         self.games = Games()
         self.calculate_stats()

@@ -1,6 +1,7 @@
 import pandas as pd
 import streamlit as st
 
+from login import Login
 from metrics import Assists, ConcededMetric, GamesMetric, Goals, MOTMMetric
 from players import Players
 
@@ -12,6 +13,9 @@ class PlayersPage:
     }
 
     def __init__(self):
+        self.login = Login()
+        self.login.authentication()
+
         self.players = Players()
 
     def render(self):

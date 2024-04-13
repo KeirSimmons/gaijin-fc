@@ -1,11 +1,15 @@
 import streamlit as st
 
 from games import Games
+from login import Login
 from venues import Venues
 
 
 class PastGamePage:
     def __init__(self):
+        self.login = Login()
+        self.login.authentication()
+
         self.games = Games()
         self.venues = Venues()
         self.render()

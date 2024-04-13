@@ -4,12 +4,17 @@ import os
 import streamlit as st
 from github import Auth, Github, InputGitTreeElement
 
+from login import Login
+
 
 class Repo:
     REPO_NAME = "gaijin-fc"
     AUTH_TOKEN_KEY = "GITHUB_AUTH_TOKEN"
 
     def __init__(self):
+        self.login = Login()
+        self.login.authentication(render=False)
+
         self.load_secret()
         self.connect()
         self.find_files()
@@ -38,7 +43,8 @@ class Repo:
     def commit(self):
         with st.spinner(text="Committing all changes.."):
             repo = self.repo
-            commit_message = "Automated commit from app interaction"
+            username = self.login.get_user()
+            commit_message = f"Automated commit from app interaction ({username})"
             master_ref = repo.get_git_ref("heads/main")
             master_sha = master_ref.object.sha
             base_tree = repo.get_git_tree(master_sha)
