@@ -1,26 +1,33 @@
 {
     "Keir": {
         "initial_metrics": {
-            "MOTM": 5,
-            "assists": 0,
-            "conceded": 0,
-            "games": 5,
+            "MOTM": 6,
+            "assists": 34,
+            "conceded": 11,
+            "disciplinary": 2,
+            "games": 22,
             "games_played": 5,
-            "goals": 0
+            "goals": 64
         }
     },
     "Liam": {
         "initial_metrics": {
-            "assists": 0,
-            "games": 0,
-            "goals": 0
+            "MOTM": 3,
+            "assists": 32,
+            "conceded": 10,
+            "disciplinary": 1,
+            "games": 16,
+            "goals": 35
         }
     },
     "Rory": {
         "initial_metrics": {
-            "assists": 0,
-            "games": 0,
-            "goals": 0
+            "MOTM": 1,
+            "assists": 18,
+            "conceded": 19,
+            "disciplinary": 2,
+            "games": 17,
+            "goals": 39
         }
     }
 }
