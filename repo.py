@@ -10,6 +10,7 @@ from login import Login
 class Repo:
     REPO_NAME = "gaijin-fc"
     AUTH_TOKEN_KEY = "GITHUB_AUTH_TOKEN"
+    AUTO_COMMIT_KEY = "AUTO_COMMIT"
 
     def __init__(self):
         self.login = Login()
@@ -39,7 +40,10 @@ class Repo:
                 files.append(fh)
         self.files = files
 
-    def commit(self, msg=None):
+    def commit(self, msg=None, auto=True):
+        if auto and os.environ[Repo.AUTO_COMMIT_KEY] != 1:
+            # Don't commit if this is an auto commit and setting is off
+            return None
         with st.spinner(text="Committing all changes.."):
             repo = self.repo
             username = self.login.get_user()

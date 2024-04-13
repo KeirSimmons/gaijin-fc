@@ -149,7 +149,7 @@ class Main:
         Promotions(points).display_progress_bar()
 
         if st.button("Save changes?"):
-            Repo()
+            Repo().commit(auto=False)
 
 
 if __name__ == "__main__":
