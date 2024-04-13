@@ -41,7 +41,7 @@ class Repo:
         self.files = files
 
     def commit(self, msg=None, auto=True):
-        if auto and os.environ[Repo.AUTO_COMMIT_KEY] != 1:
+        if auto and int(os.environ[Repo.AUTO_COMMIT_KEY]) != 1:
             # Don't commit if this is an auto commit and setting is off
             return None
 
