@@ -15,6 +15,11 @@ class Login:
 
     def _get_valid_hashes(self):
         self.hashes = {}
+        if (
+            Login.ENV_USER_HASH_KEY not in os.environ
+            or Login.ENV_USERS_KEY not in os.environ
+        ):
+            raise Exception("Required environment variables not set.")
         users = json.loads(os.environ[Login.ENV_USERS_KEY])
         hashes = json.loads(os.environ[Login.ENV_USER_HASH_KEY])
         for user, hash in zip(users, hashes):
