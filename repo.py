@@ -18,7 +18,6 @@ class Repo:
         self.load_secret()
         self.connect()
         self.find_files()
-        self.commit()
 
     def load_secret(self):
         if Repo.AUTH_TOKEN_KEY in os.environ:
