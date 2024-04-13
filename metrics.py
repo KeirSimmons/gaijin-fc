@@ -134,7 +134,7 @@ class MOTMMetric(Metric):
         )
 
     def ask(self):
-        return st.toggle(self.MATCH_LABEL, key=self._key, value=self.val)
+        return st.toggle(self.MATCH_LABEL, key=self._key)
 
 
 class ConcededMetric(Metric):

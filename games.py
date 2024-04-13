@@ -3,15 +3,12 @@ import time
 
 import streamlit as st
 
-from repo import Repo
-
 
 class Games:
 
     FILE = "./games.json"
 
     def __init__(self):
-        self.repo = Repo()
         self.load()
 
     def load(self):
@@ -41,7 +38,7 @@ class Games:
         data["matches"] = []
         self.data[game_key] = data
         self.save()
-        self.repo.commit("New game created")
+        st.session_state["new_game_created"] = data["venue"]
         st.rerun()
 
     def generate_key(self):
@@ -68,7 +65,8 @@ class Games:
         if matches + 1 == max_no_of_matches:
             st.session_state["game_completed"] = game_key
             game["ongoing"] = False
+        else:
+            st.session_state["match_added"] = f"{matches+1}/{max_no_of_matches}"
         self.data[game_key] = game
         self.save()
-        self.repo.commit("Match completed")
         st.rerun()

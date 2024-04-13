@@ -6,6 +6,7 @@ from games import Games
 from login import Login
 from metrics import Assists, ConcededMetric, DisciplinaryMetric, Goals, MOTMMetric
 from players import Players
+from repo import Repo
 from venues import Venues
 
 
@@ -14,6 +15,7 @@ class CurrentGamePage:
         self.login = Login()
         self.login.authentication()
 
+        self.repo = Repo()
         self.games = Games()
         self.venues = Venues()
         self.players = Players()
@@ -22,9 +24,37 @@ class CurrentGamePage:
 
     def render(self):
         st.subheader("Current Game")
+
+        if "new_game_created" in st.session_state:
+
+            venue = self.venues.get(st.session_state["new_game_created"])
+
+            self.repo.commit(
+                (
+                    f"Kicking off a new game in {venue}"
+                    if venue
+                    else "Kicking off a new game"
+                ),
+                auto=False,
+            )
+            del st.session_state["new_game_created"]
+
+        if "game_completed" in st.session_state:
+            st.success(f"Game completed!")
+            self.repo.commit(
+                f"Finalising the game after all matches completed", auto=False
+            )
+            del st.session_state["game_completed"]
+
+        if "match_added" in st.session_state:
+            self.repo.commit(
+                f"Adding scores for a single match (#{st.session_state['match_added']})",
+                auto=False,
+            )
+            del st.session_state["match_added"]
+
         self.ongoing_game = self.games.get(ongoing=True)
         if not len(self.ongoing_game):
-            self.report_completed_game()
             self.render_start_new_game()
         elif len(self.ongoing_game) == 1:
             self.ongoing_game = self.ongoing_game[0]
@@ -32,22 +62,23 @@ class CurrentGamePage:
         else:
             raise Exception("Multiple ongoing games found")
 
-    def report_completed_game(self):
-        if "game_completed" in st.session_state:
-            st.info(f"Game completed! ")
-            del st.session_state["game_completed"]
-
     def render_current_game(self):
 
         key = self.ongoing_game["key"]
         game = self.ongoing_game["game"]
+        matches_played = len(game["matches"])
+        current_match = matches_played + 1
 
         for i, match in enumerate(game["matches"]):
             with st.expander(f"Match {i+1}"):
                 st.write(match)
 
         form_data = {"players": {}}
-        with st.form("something"):
+        with st.form("add-match", clear_on_submit=True):
+            st.markdown(f"**Match {current_match}**")
+            with st.expander("Game particulars", expanded=True):
+                form_data["level"] = st.selectbox("Level?", ["Enjoy", "Gachi"])
+            st.divider()
             for player in self.players.get_data():
                 form_data["players"][player] = {}
                 with st.expander(player, expanded=True):
@@ -58,9 +89,10 @@ class CurrentGamePage:
                         DisciplinaryMetric,
                         MOTMMetric,
                     ]:
-                        form_data["players"][player][metric.KEY] = metric(0).ask()
-            with st.expander("Game particulars", expanded=True):
-                form_data["level"] = st.selectbox("Level?", ["Enjoy", "Gachi"])
+                        key = f"{player}-{metric.KEY}"
+                        form_data["players"][player][metric.KEY] = int(
+                            metric(val=0, key=key).ask()
+                        )
             submit = st.form_submit_button("Submit match")
         if submit:
             self.games.submit_match(form_data)
@@ -70,6 +102,7 @@ class CurrentGamePage:
         venues = self.venues.get_all()
         venue_map = {venue["name"]: key for key, venue in venues.items()}
         with st.form("new-game"):
+            st.markdown("**No ongoing-game - let's start a new one!**")
             form_data = {
                 "date": st.date_input("Date?", format="YYYY/MM/DD"),
                 "venue": st.selectbox(
