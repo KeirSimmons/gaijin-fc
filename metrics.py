@@ -1,3 +1,5 @@
+import random
+
 import streamlit as st
 
 
@@ -10,12 +12,17 @@ class Metric:
     def __init__(self, val=None):
         self.val = val
         self.val = self.format()
+        self._key = str(random.random())
 
     def format(self):
         return self.val
 
     def valid(self):
         raise NotImplementedError
+
+    def initial_ask(self):
+        # The specific form to use on the initial page (if different to a game)
+        return self.ask()
 
     def ask(self):
         raise NotImplementedError
@@ -52,7 +59,9 @@ class GamesMetric(Metric):
         return self.val >= 0
 
     def ask(self):
-        return st.number_input(self.MATCH_LABEL, min_value=0, step=1, value=self.val)
+        return st.number_input(
+            self.MATCH_LABEL, min_value=0, step=1, key=self._key, value=self.val
+        )
 
 
 class Goals(Metric):
@@ -70,7 +79,9 @@ class Goals(Metric):
         return self.val >= 0
 
     def ask(self):
-        return st.number_input(self.MATCH_LABEL, min_value=0, step=1, value=self.val)
+        return st.number_input(
+            self.MATCH_LABEL, min_value=0, step=1, key=self._key, value=self.val
+        )
 
 
 class Assists(Metric):
@@ -91,7 +102,9 @@ class Assists(Metric):
         return self.val >= 0
 
     def ask(self):
-        return st.number_input(self.MATCH_LABEL, min_value=0, step=1, value=self.val)
+        return st.number_input(
+            self.MATCH_LABEL, min_value=0, step=1, key=self._key, value=self.val
+        )
 
 
 class MOTMMetric(Metric):
@@ -111,8 +124,13 @@ class MOTMMetric(Metric):
     def valid(self):
         return self.val >= 0
 
+    def initial_ask(self):
+        return st.number_input(
+            self.MATCH_LABEL, min_value=0, step=1, key=self._key, value=self.val
+        )
+
     def ask(self):
-        return st.number_input(self.MATCH_LABEL, min_value=0, step=1, value=self.val)
+        return st.toggle(self.MATCH_LABEL, key=self._key, value=self.val)
 
 
 class ConcededMetric(Metric):
@@ -133,7 +151,9 @@ class ConcededMetric(Metric):
         return self.val >= 0
 
     def ask(self):
-        return st.number_input(self.MATCH_LABEL, min_value=0, step=1, value=self.val)
+        return st.number_input(
+            self.MATCH_LABEL, min_value=0, step=1, key=self._key, value=self.val
+        )
 
 
 class DisciplinaryMetric(Metric):
@@ -154,4 +174,6 @@ class DisciplinaryMetric(Metric):
         return self.val >= 0
 
     def ask(self):
-        return st.number_input(self.MATCH_LABEL, min_value=0, step=1, value=self.val)
+        return st.number_input(
+            self.MATCH_LABEL, min_value=0, step=1, key=self._key, value=self.val
+        )
