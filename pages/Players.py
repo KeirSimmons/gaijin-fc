@@ -23,7 +23,7 @@ class PlayersPage:
         player = st.selectbox("Edit player", options=players.keys())
 
         if "player_edited" in st.session_state:
-            st.info(
+            st.success(
                 f"Successfully edited {st.session_state['player_edited']}'s initial stats"
             )
             del st.session_state["player_edited"]

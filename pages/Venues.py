@@ -15,7 +15,7 @@ class VenuesPage:
     def render(self):
         st.subheader("Venues")
         if "venue-added" in st.session_state:
-            st.info(f"New venue added ({st.session_state['venue-added']})")
+            st.success(f"New venue added ({st.session_state['venue-added']})")
             del st.session_state["venue-added"]
         self.render_edit_form()
         self.render_add_form()
