@@ -54,15 +54,11 @@ class CurrentGamePage:
                     for metric in [
                         Goals,
                         Assists,
-                        MOTMMetric,
                         ConcededMetric,
                         DisciplinaryMetric,
+                        MOTMMetric,
                     ]:
-                        form_data["players"][player][metric.KEY] = st.number_input(
-                            metric.MATCH_LABEL,
-                            key=f"{player}-{metric.KEY}",
-                            step=1,
-                        )
+                        form_data["players"][player][metric.KEY] = metric(0).ask()
             with st.expander("Game particulars", expanded=True):
                 form_data["level"] = st.selectbox("Level?", ["Enjoy", "Gachi"])
             submit = st.form_submit_button("Submit match")
