@@ -78,7 +78,7 @@ class Main:
             else:
                 games_played = 0
             players[player][GamesMetric.KEY] = games_played
-            actuals[GamesMetric.KEY][player] = games_played
+            actuals[GamesMetric.KEY][player] = 0  # no points for games played
             metrics[GamesMetric.KEY][player] = games_played
 
         # Now add initial data
@@ -117,8 +117,8 @@ class Main:
                     data["Points"].get(player) is None
                     or data["Points"].get(player) == 0
                 )
-                else (self.stats["actuals"][GamesMetric.KEY].get(player) or 0)
-                / data["Points"].get(player)
+                else data["Points"].get(player)
+                / (self.stats["metrics"][GamesMetric.KEY].get(player) or 0)
             )
             for player in players
         }
