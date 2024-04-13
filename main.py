@@ -13,12 +13,15 @@ class Main:
         self.login = Login()
         self.login.authentication()
 
+        st.header("Gaijin FC")
+
         self.stats = Stats()
         self.show_summary()
         self.show_commit_button()
 
     def show_summary(self):
         self.stats.process()
+        st.markdown("**Points till next promotion!**")
         Promotions(self.stats.get_points()).display_progress_bar()
 
     def show_commit_button(self):
