@@ -51,6 +51,12 @@ class CurrentGamePage:
             )
             del st.session_state["match_added"]
 
+        if "match-deleted" in st.session_state:
+            self.repo.commit(
+                f"Deleted match (#{st.session_state['match-deleted']})",
+            )
+            del st.session_state["match-deleted"]
+
         self.ongoing_game = self.games.get(ongoing=True)
         if not len(self.ongoing_game):
             self.render_start_new_game()
@@ -74,6 +80,11 @@ class CurrentGamePage:
                     games_to_include=[key],
                     matches_to_include=[match_id],
                 )
+                if (match_id + 1) == matches_played and st.toggle(
+                    "Delete?", key=f"toggle-{key}-{match_id}"
+                ):
+                    if st.button("Confirm deletion", key=f"confirm-{key}-{match_id}"):
+                        self.games.del_match(key, match_id)
 
         form_data = {"players": {}}
         with st.form("add-match", clear_on_submit=True):

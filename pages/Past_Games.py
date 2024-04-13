@@ -2,6 +2,7 @@ import streamlit as st
 
 from games import Games
 from login import Login
+from repo import Repo
 from stats import Stats
 from venues import Venues
 
@@ -14,7 +15,17 @@ class PastGamePage:
         self.games = Games()
         self.venues = Venues()
         self.stats = Stats()
+        self.repo = Repo()
+
+        self.state_checks()
         self.render()
+
+    def state_checks(self):
+
+        if "game-deleted" in st.session_state:
+            st.success(f"Game deleted successfully")
+            self.repo.commit(f"Deleted game {st.session_state['game-deleted']}")
+            del st.session_state["game-deleted"]
 
     def render(self):
         st.subheader("Past Games")
@@ -34,6 +45,11 @@ class PastGamePage:
                     include_initial=False,
                     games_to_include=[game_key],
                 )
+                if st.toggle("Delete?", key=f"toggle-delete-game-{game_key}"):
+                    if st.button(
+                        "Confirm deletion", key=f"confirm-delete-game-{game_key}"
+                    ):
+                        self.games.del_game(game_key)
 
 
 if __name__ == "__main__":

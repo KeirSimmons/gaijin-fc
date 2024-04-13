@@ -41,6 +41,22 @@ class Games:
         st.session_state["new_game_created"] = data["venue"]
         st.rerun()
 
+    def del_game(self, game_key):
+        if game_key in self.data:
+            del self.data[game_key]
+            self.save()
+            st.session_state["game-deleted"] = game_key
+            st.rerun()
+
+    def del_match(self, game_key, match_id):
+        if game_key in self.data and (
+            len(self.data[game_key]["matches"]) == match_id + 1
+        ):
+            self.data[game_key]["matches"] = self.data[game_key]["matches"][:-1]
+            self.save()
+            st.session_state["match-deleted"] = f"game {game_key}, match {match_id}"
+            st.rerun()
+
     def generate_key(self):
         # Format: game-xx
         recent_ids = sorted(
