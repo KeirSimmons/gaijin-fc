@@ -4,7 +4,7 @@ import streamlit as st
 class Metric:
 
     INITIAL_METRICS_KEY = "initial_metrics"
-    ENJOY_MULTIPLIER = 0.5
+    ENJOY_MULTIPLIER = 1
     GACHI_MULTIPLIER = 1
 
     def __init__(self, val=None):
@@ -31,10 +31,10 @@ class Metric:
         raise Exception(f"Invalid game level found ({level})")
 
     def calc_enjoy(self):
-        return self.val * Metric.ENJOY_MULTIPLIER
+        return self.val * self.ENJOY_MULTIPLIER
 
     def calc_gachi(self):
-        return self.val * Metric.GACHI_MULTIPLIER
+        return self.val * self.GACHI_MULTIPLIER
 
 
 class GamesMetric(Metric):
@@ -80,6 +80,69 @@ class Assists(Metric):
 
     ENJOY_MULTIPLIER = 0.5
     GACHI_MULTIPLIER = 0.5
+
+    def __init__(self, val=None):
+        super().__init__(val)
+
+    def format(self):
+        return int(self.val) if self.val is not None else None
+
+    def valid(self):
+        return self.val >= 0
+
+    def ask(self):
+        return st.number_input(self.MATCH_LABEL, min_value=0, step=1, value=self.val)
+
+
+class MOTMMetric(Metric):
+    KEY = "MOTM"
+    MATCH_LABEL = "MOTM?"
+    GRAPH_LABEL = "MOTM"
+
+    ENJOY_MULTIPLIER = 0.5
+    GACHI_MULTIPLIER = 0.5
+
+    def __init__(self, val=None):
+        super().__init__(val)
+
+    def format(self):
+        return int(self.val) if self.val is not None else None
+
+    def valid(self):
+        return self.val >= 0
+
+    def ask(self):
+        return st.number_input(self.MATCH_LABEL, min_value=0, step=1, value=self.val)
+
+
+class ConcededMetric(Metric):
+    KEY = "conceded"
+    MATCH_LABEL = "Conceded?"
+    GRAPH_LABEL = "Conceded"
+
+    ENJOY_MULTIPLIER = -1
+    GACHI_MULTIPLIER = 0
+
+    def __init__(self, val=None):
+        super().__init__(val)
+
+    def format(self):
+        return int(self.val) if self.val is not None else None
+
+    def valid(self):
+        return self.val >= 0
+
+    def ask(self):
+        return st.number_input(self.MATCH_LABEL, min_value=0, step=1, value=self.val)
+
+
+class DisciplinaryMetric(Metric):
+    KEY = "disciplinary"
+    MATCH_LABEL = "Disciplinaries?"
+    GRAPH_LABEL = "OG / Discip."
+
+    ENJOY_MULTIPLIER = -2
+    GACHI_MULTIPLIER = -2
 
     def __init__(self, val=None):
         super().__init__(val)
