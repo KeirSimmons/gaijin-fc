@@ -9,10 +9,10 @@ class Metric:
     ENJOY_MULTIPLIER = 1
     GACHI_MULTIPLIER = 1
 
-    def __init__(self, val=None):
+    def __init__(self, val=None, key=None):
         self.val = val
         self.val = self.format()
-        self._key = str(random.random())
+        self._key = str(random.random()) if key is None else key
 
     def format(self):
         return self.val
@@ -49,8 +49,12 @@ class GamesMetric(Metric):
     MATCH_LABEL = "Games played?"
     GRAPH_LABEL = "Games"
 
-    def __init__(self, val=None):
-        super().__init__(val)
+    # No points for playing!
+    ENJOY_MULTIPLIER = 0
+    GACHI_MULTIPLIER = 0
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
     def format(self):
         return int(self.val) if self.val is not None else None
@@ -69,8 +73,8 @@ class Goals(Metric):
     MATCH_LABEL = "Goals scored?"
     GRAPH_LABEL = "Goals"
 
-    def __init__(self, val=None):
-        super().__init__(val)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
     def format(self):
         return int(self.val) if self.val is not None else None
@@ -92,8 +96,8 @@ class Assists(Metric):
     ENJOY_MULTIPLIER = 0.5
     GACHI_MULTIPLIER = 0.5
 
-    def __init__(self, val=None):
-        super().__init__(val)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
     def format(self):
         return int(self.val) if self.val is not None else None
@@ -115,8 +119,8 @@ class MOTMMetric(Metric):
     ENJOY_MULTIPLIER = 0.5
     GACHI_MULTIPLIER = 0.5
 
-    def __init__(self, val=None):
-        super().__init__(val)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
     def format(self):
         return int(self.val) if self.val is not None else None
@@ -141,8 +145,8 @@ class ConcededMetric(Metric):
     ENJOY_MULTIPLIER = -1
     GACHI_MULTIPLIER = 0
 
-    def __init__(self, val=None):
-        super().__init__(val)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
     def format(self):
         return int(self.val) if self.val is not None else None
@@ -164,8 +168,8 @@ class DisciplinaryMetric(Metric):
     ENJOY_MULTIPLIER = -2
     GACHI_MULTIPLIER = -2
 
-    def __init__(self, val=None):
-        super().__init__(val)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
     def format(self):
         return int(self.val) if self.val is not None else None
