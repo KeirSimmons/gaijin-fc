@@ -7,6 +7,7 @@ from login import Login
 from metrics import Assists, ConcededMetric, DisciplinaryMetric, Goals, MOTMMetric
 from players import Players
 from repo import Repo
+from stats import Stats
 from venues import Venues
 
 
@@ -19,6 +20,7 @@ class CurrentGamePage:
         self.games = Games()
         self.venues = Venues()
         self.players = Players()
+        self.stats = Stats()
 
         self.render()
 
@@ -69,9 +71,13 @@ class CurrentGamePage:
         matches_played = len(game["matches"])
         current_match = matches_played + 1
 
-        for i, match in enumerate(game["matches"]):
-            with st.expander(f"Match {i+1}"):
-                st.write(match)
+        for match_id, match in enumerate(game["matches"]):
+            with st.expander(f"Match {match_id+1}"):
+                self.stats.process(
+                    include_initial=False,
+                    games_to_include=[key],
+                    matches_to_include=[match_id],
+                )
 
         form_data = {"players": {}}
         with st.form("add-match", clear_on_submit=True):

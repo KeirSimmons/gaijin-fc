@@ -2,6 +2,7 @@ import streamlit as st
 
 from games import Games
 from login import Login
+from stats import Stats
 from venues import Venues
 
 
@@ -12,6 +13,7 @@ class PastGamePage:
 
         self.games = Games()
         self.venues = Venues()
+        self.stats = Stats()
         self.render()
 
     def render(self):
@@ -28,7 +30,10 @@ class PastGamePage:
             with st.expander(
                 f"#{len(games)-i} - **{venue}** {game['date']}", expanded=not i
             ):
-                st.write(game)
+                self.stats.process(
+                    include_initial=False,
+                    games_to_include=[game_key],
+                )
 
 
 if __name__ == "__main__":
