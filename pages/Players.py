@@ -38,7 +38,7 @@ class PlayersPage:
                         )
                         form_data[metric.KEY] = {
                             "metric": metric,
-                            "val": metric(current_val).ask(),
+                            "val": metric(current_val).initial_ask(),
                         }
 
                     submit = st.form_submit_button("Edit")
