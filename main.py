@@ -148,8 +148,10 @@ class Main:
         points = sum([val for val in data["Points"].values()])
         Promotions(points).display_progress_bar()
 
-        if st.button("Save changes?"):
-            Repo().commit(auto=False)
+        repo = Repo()
+        if repo.find_changes():
+            if st.button("Save changes?"):
+                repo.commit(auto=False)
 
 
 if __name__ == "__main__":

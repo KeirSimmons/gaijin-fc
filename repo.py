@@ -45,38 +45,43 @@ class Repo:
             # Don't commit if this is an auto commit and setting is off
             return None
         with st.spinner(text="Committing all changes.."):
-            repo = self.repo
             username = self.login.get_user()
 
             if msg is None:
                 commit_message = f"{username}: Automated commit from app interaction"
             else:
                 commit_message = f"{username}: {msg} (Automated commit)"
-            master_ref = repo.get_git_ref("heads/main")
+            master_ref = self.repo.get_git_ref("heads/main")
             master_sha = master_ref.object.sha
-            base_tree = repo.get_git_tree(master_sha)
+            base_tree = self.repo.get_git_tree(master_sha)
 
-            element_list = list()
-            for i, entry in enumerate(self.files):
-                with open(entry) as input_file:
-                    data = input_file.read()
-                if entry.endswith(".png"):  # images must be encoded
-                    data = base64.b64encode(data)
-                github_file = repo.get_contents(entry)
-                github_content = github_file.decoded_content.decode("utf-8")
-                if github_content != data:
-                    st.info(f"Committing changes to file {entry}")
-                    element = InputGitTreeElement(self.files[i], "100644", "blob", data)
-                    element_list.append(element)
+            files_with_changes = self.find_changes()
 
-            if element_list:
-                tree = repo.create_git_tree(element_list, base_tree)
-                parent = repo.get_git_commit(master_sha)
-                commit = repo.create_git_commit(commit_message, tree, [parent])
+            if files_with_changes:
+                element_list = [
+                    InputGitTreeElement(file_name, "100644", "blob", data)
+                    for file_name, data in files_with_changes
+                ]
+                tree = self.repo.create_git_tree(element_list, base_tree)
+                parent = self.repo.get_git_commit(master_sha)
+                commit = self.repo.create_git_commit(commit_message, tree, [parent])
                 master_ref.edit(commit.sha)
                 st.info("All changes committed")
             else:
                 st.info("No changes to commit")
+
+    def find_changes(self):
+        file_list = list()
+        for i, entry in enumerate(self.files):
+            with open(entry) as input_file:
+                data = input_file.read()
+            if entry.endswith(".png"):  # images must be encoded
+                data = base64.b64encode(data)
+            github_file = self.repo.get_contents(entry)
+            github_content = github_file.decoded_content.decode("utf-8")
+            if github_content != data:
+                file_list.append([self.files[i], data])
+        return file_list
 
 
 if __name__ == "__main__":
