@@ -1,12 +1,15 @@
 import pandas as pd
 import streamlit as st
 
-from metrics import Assists, Goals
+from metrics import Assists, ConcededMetric, GamesMetric, Goals, MOTMMetric
 from players import Players
 
 
 class PlayersPage:
-    METRICS = {metric_class.KEY: metric_class for metric_class in [Goals, Assists]}
+    METRICS = {
+        metric_class.KEY: metric_class
+        for metric_class in [GamesMetric, Goals, Assists, MOTMMetric, ConcededMetric]
+    }
 
     def __init__(self):
         self.players = Players()

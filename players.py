@@ -2,12 +2,30 @@ import json
 
 import streamlit as st
 
-from metrics import Assists, Goals, Metric
+from metrics import (
+    Assists,
+    ConcededMetric,
+    DisciplinaryMetric,
+    GamesMetric,
+    Goals,
+    Metric,
+    MOTMMetric,
+)
 
 
 class Players:
 
-    METRICS = {metric_class.KEY: metric_class for metric_class in [Goals, Assists]}
+    METRICS = {
+        metric_class.KEY: metric_class
+        for metric_class in [
+            GamesMetric,
+            Goals,
+            Assists,
+            MOTMMetric,
+            ConcededMetric,
+            DisciplinaryMetric,
+        ]
+    }
 
     FILE = "./players.json"
 
