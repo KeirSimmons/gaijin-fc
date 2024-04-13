@@ -44,20 +44,21 @@ class Repo:
         if auto and os.environ[Repo.AUTO_COMMIT_KEY] != 1:
             # Don't commit if this is an auto commit and setting is off
             return None
-        with st.spinner(text="Committing all changes.."):
-            username = self.login.get_user()
 
-            if msg is None:
-                commit_message = f"{username}: Automated commit from app interaction"
-            else:
-                commit_message = f"{username}: {msg} (Automated commit)"
-            master_ref = self.repo.get_git_ref("heads/main")
-            master_sha = master_ref.object.sha
-            base_tree = self.repo.get_git_tree(master_sha)
+        username = self.login.get_user()
 
-            files_with_changes = self.find_changes()
+        if msg is None:
+            commit_message = f"{username}: Automated commit from app interaction"
+        else:
+            commit_message = f"{username}: {msg} (Automated commit)"
+        master_ref = self.repo.get_git_ref("heads/main")
+        master_sha = master_ref.object.sha
+        base_tree = self.repo.get_git_tree(master_sha)
 
-            if files_with_changes:
+        files_with_changes = self.find_changes()
+
+        if files_with_changes:
+            with st.spinner("Saving changes.."):
                 element_list = [
                     InputGitTreeElement(file_name, "100644", "blob", data)
                     for file_name, data in files_with_changes
@@ -66,9 +67,6 @@ class Repo:
                 parent = self.repo.get_git_commit(master_sha)
                 commit = self.repo.create_git_commit(commit_message, tree, [parent])
                 master_ref.edit(commit.sha)
-                st.info("All changes committed")
-            else:
-                st.info("No changes to commit")
 
     def find_changes(self):
         file_list = list()
