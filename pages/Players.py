@@ -2,14 +2,28 @@ import pandas as pd
 import streamlit as st
 
 from login import Login
-from metrics import Assists, ConcededMetric, GamesMetric, Goals, MOTMMetric
+from metrics import (
+    Assists,
+    ConcededMetric,
+    DisciplinaryMetric,
+    GamesMetric,
+    Goals,
+    MOTMMetric,
+)
 from players import Players
 
 
 class PlayersPage:
     METRICS = {
         metric_class.KEY: metric_class
-        for metric_class in [GamesMetric, Goals, Assists, MOTMMetric, ConcededMetric]
+        for metric_class in [
+            GamesMetric,
+            Goals,
+            Assists,
+            MOTMMetric,
+            ConcededMetric,
+            DisciplinaryMetric,
+        ]
     }
 
     def __init__(self):
@@ -38,7 +52,9 @@ class PlayersPage:
                         )
                         form_data[metric.KEY] = {
                             "metric": metric,
-                            "val": metric(current_val).initial_ask(),
+                            "val": metric(
+                                current_val, key=f"{player}-{metric.KEY}"
+                            ).initial_ask(),
                         }
 
                     submit = st.form_submit_button("Edit")
