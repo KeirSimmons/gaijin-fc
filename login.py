@@ -63,3 +63,8 @@ class Login:
             return self.user
         else:
             raise Exception("Not logged in")
+
+    def logout(self):
+        if self.check_logged_in():
+            del st.session_state[Login.STATE_KEY]
+        st.switch_page("main.py")
