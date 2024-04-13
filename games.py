@@ -3,12 +3,15 @@ import time
 
 import streamlit as st
 
+from repo import Repo
+
 
 class Games:
 
     FILE = "./games.json"
 
     def __init__(self):
+        self.repo = Repo()
         self.load()
 
     def load(self):
@@ -38,6 +41,7 @@ class Games:
         data["matches"] = []
         self.data[game_key] = data
         self.save()
+        self.repo.commit("New game created")
         st.rerun()
 
     def generate_key(self):
@@ -66,4 +70,5 @@ class Games:
             game["ongoing"] = False
         self.data[game_key] = game
         self.save()
+        self.repo.commit("Match completed")
         st.rerun()
