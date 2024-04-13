@@ -11,6 +11,7 @@ from metrics import (
     MOTMMetric,
 )
 from players import Players
+from repo import Repo
 
 
 class PlayersPage:
@@ -40,6 +41,8 @@ class PlayersPage:
             st.success(
                 f"Successfully edited {st.session_state['player_edited']}'s initial stats"
             )
+            repo = Repo()
+            repo.commit(f"Edited initial stats of {player}")
             del st.session_state["player_edited"]
 
         if player:
