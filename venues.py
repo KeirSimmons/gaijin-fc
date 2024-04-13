@@ -32,8 +32,11 @@ class Venues:
 
     def edit(self, key, new_data):
         if key in self.data:
+            old_venue_name = self.data[key]["name"]
             self.data[key].update(new_data)
+            new_venue_name = self.data[key]["name"]
             self.save()
+            st.session_state["venue-edited"] = f"{old_venue_name} -> {new_venue_name}"
             st.rerun()
         else:
             raise Exception(f"Venue does not exist.")
@@ -45,7 +48,9 @@ class Venues:
             if key in venues:
                 raise Exception("Cannot delete venue as it has been played at before.")
             else:
+                venue_name = self.data[key]["name"]
                 del self.data[key]
+                st.session_state["venue-deleted"] = venue_name
             self.save()
             st.rerun()
         else:

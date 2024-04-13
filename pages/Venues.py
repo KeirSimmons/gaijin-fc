@@ -1,6 +1,7 @@
 import streamlit as st
 
 from login import Login
+from repo import Repo
 from venues import Venues
 
 
@@ -16,7 +17,23 @@ class VenuesPage:
         st.subheader("Venues")
         if "venue-added" in st.session_state:
             st.success(f"New venue added ({st.session_state['venue-added']})")
+            repo = Repo()
+            repo.commit(
+                f"Added a new venue ({st.session_state['venue-added']})", auto=False
+            )
             del st.session_state["venue-added"]
+        if "venue-deleted" in st.session_state:
+            st.success("Venue deleted successfully")
+            repo = Repo()
+            repo.commit(
+                f"Deleted venue {st.session_state['venue-deleted']}", auto=False
+            )
+            del st.session_state["venue-deleted"]
+        if "venue-edited" in st.session_state:
+            st.success("Venue edited successfully")
+            repo = Repo()
+            repo.commit(f"Edited venue {st.session_state['venue-edited']}", auto=False)
+            del st.session_state["venue-edited"]
         self.render_edit_form()
         self.render_add_form()
 
