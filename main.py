@@ -19,6 +19,9 @@ class Main:
         self.show_summary()
         self.show_commit_button()
 
+        st.divider()
+        st.markdown(f"_Logged in as {self.login.get_user()}_")
+
     def show_summary(self):
         self.stats.process()
         st.markdown("**Points till next promotion!**")
