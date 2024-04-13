@@ -44,7 +44,34 @@
         "created": 1712999547.9583943,
         "date": "2024-04-13",
         "duration": 7,
-        "matches": [],
+        "matches": [
+            {
+                "level": "Enjoy",
+                "players": {
+                    "Keir": {
+                        "MOTM": 0,
+                        "assists": 0,
+                        "conceded": 0,
+                        "disciplinary": 0,
+                        "goals": 10
+                    },
+                    "Liam": {
+                        "MOTM": 0,
+                        "assists": 0,
+                        "conceded": 0,
+                        "disciplinary": 0,
+                        "goals": 0
+                    },
+                    "Rory": {
+                        "MOTM": 0,
+                        "assists": 0,
+                        "conceded": 0,
+                        "disciplinary": 0,
+                        "goals": 0
+                    }
+                }
+            }
+        ],
         "no_of_matches": 2,
         "ongoing": true,
         "players": [
