@@ -144,8 +144,12 @@ class CurrentGamePage:
             self.create_game(form_data)
 
     def create_game(self, form_data):
-        form_data["date"] = str(form_data["date"])
-        self.games.add_game(form_data)
+        # Check we have at least 1 player
+        if form_data["players"]:
+            form_data["date"] = str(form_data["date"])
+            self.games.add_game(form_data)
+        else:
+            st.error("Manchester United error encountered. No players turned up.")
 
 
 if __name__ == "__main__":
