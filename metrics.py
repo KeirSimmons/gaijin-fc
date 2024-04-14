@@ -6,6 +6,7 @@ import streamlit as st
 class Metric:
 
     INITIAL_METRICS_KEY = "initial_metrics"
+    SINGLE_MULTIPLIER = 0
     ENJOY_MULTIPLIER = 1
     GACHI_MULTIPLIER = 1
 
@@ -32,16 +33,14 @@ class Metric:
 
     def calc(self, level):
         if level == "Enjoy":
-            return self.calc_enjoy()
+            multiplier = self.ENJOY_MULTIPLIER
         elif level == "Gachi":
-            return self.calc_gachi()
-        raise Exception(f"Invalid game level found ({level})")
-
-    def calc_enjoy(self):
-        return self.val * self.ENJOY_MULTIPLIER
-
-    def calc_gachi(self):
-        return self.val * self.GACHI_MULTIPLIER
+            multiplier = self.GACHI_MULTIPLIER
+        elif level == "Single":
+            multiplier = self.SINGLE_MULTIPLIER
+        else:
+            raise Exception(f"Invalid game level found ({level})")
+        return self.val * multiplier
 
 
 class GamesMetric(Metric):
