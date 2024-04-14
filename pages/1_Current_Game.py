@@ -95,6 +95,8 @@ class CurrentGamePage:
                 )
             st.divider()
             for player in self.players.get_data():
+                if player not in game["players"]:
+                    continue
                 form_data["players"][player] = {}
                 with st.expander(player, expanded=True):
                     for metric in [
