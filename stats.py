@@ -82,7 +82,11 @@ class Stats:
                     for metric in metrics_to_consider:
                         if metric.KEY in player_data:
                             metric_val = player_data[metric.KEY]
-                            score = metric(metric_val).calc(level)
+                            # We don't count points from a game with one player
+                            if len(game_data["players"]) == 1:
+                                score = 0
+                            else:
+                                score = metric(metric_val).calc(level)
                             players[player][metric.KEY] += score
                             actuals[metric.KEY][player] += score
                             metrics[metric.KEY][player] += metric_val
