@@ -90,9 +90,7 @@ class CurrentGamePage:
         with st.form("add-match", clear_on_submit=True):
             st.markdown(f"**Match {current_match}**")
             with st.expander("Game particulars", expanded=True):
-                form_data["level"] = st.selectbox(
-                    "Level?", ["Enjoy", "Gachi", "Single"]
-                )
+                form_data["level"] = st.selectbox("Level?", ["Enjoy", "Gachi"])
             st.divider()
             for player in self.players.get_data():
                 if player not in game["players"]:

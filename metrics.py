@@ -6,7 +6,6 @@ import streamlit as st
 class Metric:
 
     INITIAL_METRICS_KEY = "initial_metrics"
-    SINGLE_MULTIPLIER = 0
     ENJOY_MULTIPLIER = 1
     GACHI_MULTIPLIER = 1
 
@@ -36,8 +35,6 @@ class Metric:
             multiplier = self.ENJOY_MULTIPLIER
         elif level == "Gachi":
             multiplier = self.GACHI_MULTIPLIER
-        elif level == "Single":
-            multiplier = self.SINGLE_MULTIPLIER
         else:
             raise Exception(f"Invalid game level found ({level})")
         return self.val * multiplier
