@@ -558,9 +558,29 @@
         "created": 1713790117.9498568,
         "date": "2024-04-22",
         "duration": 60,
-        "matches": [],
+        "matches": [
+            {
+                "level": "Gachi",
+                "players": {
+                    "Keir": {
+                        "MOTM": 0,
+                        "assists": 1,
+                        "conceded": 0,
+                        "disciplinary": 0,
+                        "goals": 2
+                    },
+                    "Rory": {
+                        "MOTM": 0,
+                        "assists": 0,
+                        "conceded": 0,
+                        "disciplinary": 1,
+                        "goals": 0
+                    }
+                }
+            }
+        ],
         "no_of_matches": 1,
-        "ongoing": true,
+        "ongoing": false,
         "players": [
             "Keir",
             "Rory"
