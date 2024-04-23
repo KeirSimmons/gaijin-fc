@@ -1,4 +1,5 @@
 from collections import defaultdict
+from datetime import datetime
 
 import numpy as np
 import pandas as pd
@@ -45,15 +46,17 @@ class Stats:
         games_to_include=None,
         matches_to_include=None,
         players=None,
-        normalise=True,
+        normalise=False,
+        display=True,
     ):
         self.include_initial = include_initial
         self.games_to_include = games_to_include
         self.matches_to_include = matches_to_include
-        self.players_to_include = players
+        self.players_to_include = players or self.players.get_data().keys()
         self.normalise = normalise
         self.calculate_stats()
-        self.display()
+        if display:
+            self.display()
 
     def calculate_stats(self):
         """We have two scores we want to track:
@@ -86,6 +89,8 @@ class Stats:
                     continue
                 level = match["level"]
                 for player, player_data in match["players"].items():
+                    if player not in self.players_to_include:
+                        continue
                     for metric in metrics_to_consider:
                         if metric.KEY in player_data:
                             metric_val = player_data[metric.KEY]
@@ -101,7 +106,8 @@ class Stats:
         # Games played is different (and we only add it if including initial metrics)
         ## Why? If we are not, we're likely on a sub-graph
         if self.include_initial:
-            for player, player_data in self.players.get_data().items():
+            for player in self.players_to_include:
+                player_data = self.players.get_data(player)
                 if self.games.get():
                     games_played = sum(
                         [1 if player in self.games.get()[0]["game"]["players"] else 0]
@@ -114,7 +120,8 @@ class Stats:
 
         # Now add initial data
         if self.include_initial:
-            for player, player_data in self.players.get_data().items():
+            for player in self.players_to_include:
+                player_data = self.players.get_data(player)
                 for metric in metrics_to_consider:
                     if metric.KEY in player_data["initial_metrics"]:
                         # Assume enjoy level for all of these
@@ -135,11 +142,7 @@ class Stats:
         additional_metrics = ["Points"]
 
         data = self.stats["metrics"]
-        players = (
-            self.players.get_data().keys()
-            if self.players_to_include is None
-            else self.players_to_include
-        )
+        players = self.players_to_include
 
         data["Points"] = {
             player: sum(
@@ -214,6 +217,51 @@ class Stats:
 
     def get_points(self):
         return self.points
+
+    def process_historical(self, player):
+        x = []
+        y = defaultdict(list)
+        largest = defaultdict(lambda: -np.inf)
+        metrics = [Goals, Assists, ConcededMetric, DisciplinaryMetric]
+
+        for game in sorted(
+            self.games.get(),
+            key=lambda x: datetime.strptime(x["game"]["date"], "%Y-%m-%d"),
+        ):
+            match_data = game["game"]["matches"]
+            if player not in game["game"]["players"]:
+                continue
+            extracted_metrics = {
+                metric.KEY: sum(
+                    match["players"][player][metric.KEY] for match in match_data
+                )
+                for metric in metrics
+            }
+            x.append(game["game"]["date"])
+            st.write()
+            for metric in metrics:
+                val = extracted_metrics.get(metric.KEY) or 0
+                y[metric.KEY].append(val)
+                largest[metric.KEY] = max(largest[metric.KEY], val)
+
+        fig = go.Figure()
+        for metric in metrics:
+            fig.add_trace(
+                go.Scatter(
+                    x=x,
+                    y=(
+                        np.zeros_like(y[metric.KEY])
+                        if largest[metric.KEY] == 0
+                        else np.asarray(y[metric.KEY]) / largest[metric.KEY]
+                    ),
+                    mode="markers+lines",
+                    name=metric.GRAPH_LABEL,
+                )
+            )
+        fig.update_traces(marker_size=10)
+        fig.update_layout(title="Progress")
+
+        st.plotly_chart(fig)
 
 
 if __name__ == "__main__":

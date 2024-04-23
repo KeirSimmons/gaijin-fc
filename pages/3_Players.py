@@ -12,6 +12,7 @@ from metrics import (
 )
 from players import Players
 from repo import Repo
+from stats import Stats
 
 
 class PlayersPage:
@@ -32,10 +33,11 @@ class PlayersPage:
         self.login.authentication()
 
         self.players = Players()
+        self.stats = Stats()
 
     def render(self):
         players = self.players.get_data()
-        player = st.selectbox("Edit player", options=players.keys())
+        player = st.selectbox("Select player", options=players.keys())
 
         if "player_edited" in st.session_state:
             st.success(
@@ -46,7 +48,14 @@ class PlayersPage:
             del st.session_state["player_edited"]
 
         if player:
-            with st.expander("Editing **initial** stats:", expanded=True):
+
+            # Show graph of user stats
+            self.stats.process(include_initial=True, players=[player])
+
+            # Show graph of development over time
+            self.stats.process_historical(player=player)
+
+            with st.expander("Edit **initial** stats:", expanded=False):
                 with st.form(f"edit-player-{player}"):
                     form_data = {"player": player}
                     for metric in PlayersPage.METRICS.values():

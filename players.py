@@ -47,8 +47,8 @@ class Players:
     def get_initial_metric(self, player, metric):
         return self.get(player, "initial_metrics").get(metric) or 0
 
-    def get_data(self):
-        return self.data
+    def get_data(self, player=None):
+        return self.data if player is None else self.data.get(player)
 
     def set_initial_metrics(self, player_id, params=None):
         # First convert params to a dict if necessary
