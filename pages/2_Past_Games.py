@@ -44,7 +44,7 @@ class PastGamePage:
                 self.stats.process(
                     include_initial=False,
                     games_to_include=[game_key],
-                    players=game["players"]
+                    players=game["players"],
                 )
 
                 points = {
@@ -56,7 +56,10 @@ class PastGamePage:
 
                 for player in players_sorted:
                     pct = max(0.0, min(1.0, points[player] / max(0.01, total_points)))
-                    st.progress(pct, text=f"{player} ({"+" if points[player] > 0 else ""}{points[player]} points)")
+                    st.progress(
+                        pct,
+                        text=f"{player} ({'+' if points[player] > 0 else ''}{points[player]} points)",
+                    )
 
                 if st.toggle("Delete?", key=f"toggle-delete-game-{game_key}"):
                     if st.button(
