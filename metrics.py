@@ -177,3 +177,26 @@ class DisciplinaryMetric(Metric):
         return st.number_input(
             self.MATCH_LABEL, min_value=0, step=1, key=self._key, value=self.val
         )
+
+
+class HatrickMetric(Metric):
+    KEY = "hatrick"
+    MATCH_LABEL = "Hat tricks?"
+    GRAPH_LABEL = "Hat tricks"
+
+    ENJOY_MULTIPLIER = 1
+    GACHI_MULTIPLIER = 2
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def format(self):
+        return int(self.val) if self.val is not None else None
+
+    def valid(self):
+        return self.val >= 0
+
+    def ask(self):
+        return st.number_input(
+            self.MATCH_LABEL, min_value=0, step=1, key=self._key, value=self.val
+        )

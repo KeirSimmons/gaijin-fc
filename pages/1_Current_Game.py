@@ -4,7 +4,14 @@ import streamlit as st
 
 from games import Games
 from login import Login
-from metrics import Assists, ConcededMetric, DisciplinaryMetric, Goals, MOTMMetric
+from metrics import (
+    Assists,
+    ConcededMetric,
+    DisciplinaryMetric,
+    Goals,
+    HatrickMetric,
+    MOTMMetric,
+)
 from players import Players
 from repo import Repo
 from stats import Stats
@@ -72,7 +79,6 @@ class CurrentGamePage:
         game = self.ongoing_game["game"]
         matches_played = len(game["matches"])
         current_match = matches_played + 1
-
         for match_id, match in enumerate(game["matches"]):
             with st.expander(f"Match {match_id+1}"):
                 self.stats.process(
@@ -102,6 +108,7 @@ class CurrentGamePage:
                         Assists,
                         ConcededMetric,
                         DisciplinaryMetric,
+                        HatrickMetric,
                         MOTMMetric,
                     ]:
                         key = f"{player}-{metric.KEY}"

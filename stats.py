@@ -15,6 +15,7 @@ from metrics import (
     DisciplinaryMetric,
     GamesMetric,
     Goals,
+    HatrickMetric,
     MOTMMetric,
 )
 from players import Players
@@ -31,6 +32,7 @@ class Stats:
         MOTMMetric,
         ConcededMetric,
         DisciplinaryMetric,
+        HatrickMetric,
     ]
 
     def __init__(self):
@@ -222,7 +224,7 @@ class Stats:
         x = []
         y = defaultdict(list)
         largest = defaultdict(lambda: -np.inf)
-        metrics = [Goals, Assists, ConcededMetric, DisciplinaryMetric]
+        metrics = [Goals, Assists, HatrickMetric, ConcededMetric, DisciplinaryMetric]
 
         for game in sorted(
             self.games.get(),
@@ -233,7 +235,8 @@ class Stats:
                 continue
             extracted_metrics = {
                 metric.KEY: sum(
-                    match["players"][player][metric.KEY] for match in match_data
+                    (match["players"][player].get(metric.KEY) or 0)
+                    for match in match_data
                 )
                 for metric in metrics
             }
