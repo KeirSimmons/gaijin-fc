@@ -166,7 +166,7 @@ class Stats:
         # Display a progress bar for the next promotion
         self.points = sum([val for val in data["Points"].values()])
 
-        if self.normalise:
+        if self.normalise and GamesMetric.KEY in data:
             for metric, player_vals in data.items():
                 if metric in ["PPG", GamesMetric.KEY]:
                     continue
