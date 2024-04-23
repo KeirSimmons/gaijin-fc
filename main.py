@@ -23,9 +23,14 @@ class Main:
         st.markdown(f"_Logged in as {self.login.get_user()}_")
 
     def show_summary(self):
-        self.stats.process()
+        normalise = st.session_state.get("normalise_graph") or False
+        self.stats.process(normalise=normalise)
         st.markdown("**Points till next promotion!**")
         Promotions(self.stats.get_points()).display_progress_bar()
+
+        st.session_state["normalise_graph"] = st.toggle("Normalise?")
+        if normalise is not st.session_state.get("normalise_graph"):
+            st.rerun()
 
     def show_commit_button(self):
         repo = Repo()

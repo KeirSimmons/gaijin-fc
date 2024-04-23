@@ -45,11 +45,13 @@ class Stats:
         games_to_include=None,
         matches_to_include=None,
         players=None,
+        normalise=True,
     ):
         self.include_initial = include_initial
         self.games_to_include = games_to_include
         self.matches_to_include = matches_to_include
         self.players_to_include = players
+        self.normalise = normalise
         self.calculate_stats()
         self.display()
 
@@ -161,6 +163,26 @@ class Stats:
                 for player in players
             }
 
+        # Display a progress bar for the next promotion
+        self.points = sum([val for val in data["Points"].values()])
+
+        if self.normalise:
+            for metric, player_vals in data.items():
+                if metric in ["PPG", GamesMetric.KEY]:
+                    continue
+                for player in players:
+                    player_vals[player] = (
+                        player_vals[player] / data[GamesMetric.KEY][player]
+                    )
+            for metric, player_vals in data.items():
+                max_val = max([val for val in player_vals.values()])
+                if metric in ["PPG", GamesMetric.KEY]:
+                    continue
+                for player in players:
+                    player_vals[player] = player_vals[player] / max_val
+            del data["PPG"]
+            del data[GamesMetric.KEY]
+
         metric_order = [*additional_metrics, *Stats.METRICS]
         valid_metrics = [
             metric
@@ -188,9 +210,6 @@ class Stats:
             ]
         )
         st.plotly_chart(fig)
-
-        # Display a progress bar for the next promotion
-        self.points = sum([val for val in data["Points"].values()])
         self.data = data
 
     def get_points(self):
