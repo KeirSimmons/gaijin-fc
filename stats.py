@@ -40,11 +40,16 @@ class Stats:
         self.games = Games()
 
     def process(
-        self, include_initial=True, games_to_include=None, matches_to_include=None
+        self,
+        include_initial=True,
+        games_to_include=None,
+        matches_to_include=None,
+        players=None,
     ):
         self.include_initial = include_initial
         self.games_to_include = games_to_include
         self.matches_to_include = matches_to_include
+        self.players_to_include = players
         self.calculate_stats()
         self.display()
 
@@ -128,7 +133,11 @@ class Stats:
         additional_metrics = ["Points"]
 
         data = self.stats["metrics"]
-        players = self.players.get_data().keys()
+        players = (
+            self.players.get_data().keys()
+            if self.players_to_include is None
+            else self.players_to_include
+        )
 
         data["Points"] = {
             player: sum(
@@ -153,6 +162,11 @@ class Stats:
             }
 
         metric_order = [*additional_metrics, *Stats.METRICS]
+        valid_metrics = [
+            metric
+            for metric, player_vals in data.items()
+            if sum(player_vals.values()) != 0
+        ]
 
         fig = go.Figure(
             data=[
@@ -165,6 +179,8 @@ class Stats:
                                 player
                             ]
                             for player in players
+                            if (metric if isinstance(metric, str) else metric.KEY)
+                            in valid_metrics
                         ]
                     ],
                 )
@@ -175,6 +191,7 @@ class Stats:
 
         # Display a progress bar for the next promotion
         self.points = sum([val for val in data["Points"].values()])
+        self.data = data
 
     def get_points(self):
         return self.points
