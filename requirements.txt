@@ -3,3 +3,4 @@ pandas
 plotly
 plotly-express
 PyGithub
+extra-streamlit-components

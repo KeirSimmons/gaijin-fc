@@ -13,8 +13,6 @@ class Repo:
     AUTO_COMMIT_KEY = "AUTO_COMMIT"
 
     def __init__(self):
-        self.login = Login()
-        self.login.authentication(render=False)
 
         self.load_secret()
         self.connect()
@@ -80,7 +78,3 @@ class Repo:
             if github_content != data:
                 file_list.append([self.files[i], data])
         return file_list
-
-
-if __name__ == "__main__":
-    Repo()

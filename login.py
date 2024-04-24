@@ -1,7 +1,13 @@
 import json
 import os
 
+import extra_streamlit_components as stx
 import streamlit as st
+
+
+@st.cache_resource(experimental_allow_widgets=True)
+def get_manager():
+    return stx.CookieManager()
 
 
 class Login:
@@ -12,6 +18,7 @@ class Login:
 
     def __init__(self):
         self._get_valid_hashes()
+        self.cookie_manager = get_manager()
 
     def _get_valid_hashes(self):
         self.hashes = {}
@@ -42,17 +49,14 @@ class Login:
             raise Exception("Cannot process as not logged in.")
 
     def check_logged_in(self):
-        if Login.STATE_KEY in st.session_state:
-            submitted_hash = st.session_state[Login.STATE_KEY]
-            if submitted_hash in self.hashes:
-                self.user = self.hashes[submitted_hash]
-                return True
-            else:
-                del st.session_state[Login.STATE_KEY]
+        submitted_hash = str(self.cookie_manager.get(Login.STATE_KEY))
+        if submitted_hash in self.hashes:
+            self.user = self.hashes[submitted_hash]
+            return True
         return False
 
     def login(self, hash):
-        st.session_state[Login.STATE_KEY] = hash
+        self.cookie_manager.set(Login.STATE_KEY, hash)
         if self.check_logged_in():
             st.rerun()
         else:
@@ -66,5 +70,5 @@ class Login:
 
     def logout(self):
         if self.check_logged_in():
-            del st.session_state[Login.STATE_KEY]
+            self.cookie_manager.delete(Login.STATE_KEY)
         st.switch_page("main.py")
