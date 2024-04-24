@@ -36,6 +36,8 @@ class Stats:
     ]
 
     def __init__(self):
+        self.login = Login()
+        self.login.authentication()
 
         self.players = Players()
         self.games = Games()

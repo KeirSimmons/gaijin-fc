@@ -2,6 +2,8 @@ import json
 
 import streamlit as st
 
+from login import Login
+
 
 class Promotions:
     FILE = "./promotions.json"
@@ -9,6 +11,8 @@ class Promotions:
     TEAM_KEY = "team"
 
     def __init__(self, points):
+        self.login = Login()
+        self.login.authentication()
 
         self.points = points
 
