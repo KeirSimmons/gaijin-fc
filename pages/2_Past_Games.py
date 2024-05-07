@@ -45,6 +45,7 @@ class PastGamePage:
                     include_initial=False,
                     games_to_include=[game_key],
                     players=game["players"],
+                    subgraph=True,
                 )
 
                 points = {

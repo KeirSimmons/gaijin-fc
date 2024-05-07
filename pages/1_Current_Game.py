@@ -85,6 +85,7 @@ class CurrentGamePage:
                     include_initial=False,
                     games_to_include=[key],
                     matches_to_include=[match_id],
+                    subgraph=True,
                 )
                 if (match_id + 1) == matches_played and st.toggle(
                     "Delete?", key=f"toggle-{key}-{match_id}"

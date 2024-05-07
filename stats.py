@@ -45,17 +45,21 @@ class Stats:
     def process(
         self,
         include_initial=True,
+        include_new=True,
         games_to_include=None,
         matches_to_include=None,
         players=None,
         normalise=False,
         display=True,
+        subgraph=False,
     ):
         self.include_initial = include_initial
+        self.include_new = include_new
         self.games_to_include = games_to_include
         self.matches_to_include = matches_to_include
         self.players_to_include = players or self.players.get_data().keys()
         self.normalise = normalise
+        self.subgraph = subgraph
         self.calculate_stats()
         if display:
             self.display()
@@ -74,51 +78,52 @@ class Stats:
         metrics = defaultdict(lambda: defaultdict(int))
         actuals = defaultdict(lambda: defaultdict(int))
 
-        for game in self.games.get():
-            # If we don't want to include this game, go to the next one!
-            if (
-                self.games_to_include is not None
-                and game["key"] not in self.games_to_include
-            ):
-                continue
-            game_data = game["game"]
-
-            for match_id, match in enumerate(game_data["matches"]):
+        if self.include_new:
+            for game in self.games.get():
+                # If we don't want to include this game, go to the next one!
                 if (
-                    self.matches_to_include is not None
-                    and match_id not in self.matches_to_include
+                    self.games_to_include is not None
+                    and game["key"] not in self.games_to_include
                 ):
                     continue
-                level = match["level"]
-                for player, player_data in match["players"].items():
-                    if player not in self.players_to_include:
+                game_data = game["game"]
+
+                for match_id, match in enumerate(game_data["matches"]):
+                    if (
+                        self.matches_to_include is not None
+                        and match_id not in self.matches_to_include
+                    ):
                         continue
-                    for metric in metrics_to_consider:
-                        if metric.KEY in player_data:
-                            metric_val = player_data[metric.KEY]
-                            # We don't count points from a game with one player
-                            if len(game_data["players"]) == 1:
-                                score = 0
-                            else:
-                                score = metric(metric_val).calc(level)
-                            players[player][metric.KEY] += score
-                            actuals[metric.KEY][player] += score
-                            metrics[metric.KEY][player] += metric_val
+                    level = match["level"]
+                    for player, player_data in match["players"].items():
+                        if player not in self.players_to_include:
+                            continue
+                        for metric in metrics_to_consider:
+                            if metric.KEY in player_data:
+                                metric_val = player_data[metric.KEY]
+                                # We don't count points from a game with one player
+                                if len(game_data["players"]) == 1:
+                                    score = 0
+                                else:
+                                    score = metric(metric_val).calc(level)
+                                players[player][metric.KEY] += score
+                                actuals[metric.KEY][player] += score
+                                metrics[metric.KEY][player] += metric_val
 
         # Games played is different (and we only add it if including initial metrics)
         ## Why? If we are not, we're likely on a sub-graph
-        if self.include_initial:
-            for player in self.players_to_include:
-                player_data = self.players.get_data(player)
-                if self.games.get():
-                    games_played = sum(
-                        [1 if player in self.games.get()[0]["game"]["players"] else 0]
-                    )
-                else:
-                    games_played = 0
-                players[player][GamesMetric.KEY] = games_played
-                actuals[GamesMetric.KEY][player] = 0  # no points for games played
-                metrics[GamesMetric.KEY][player] = games_played
+        for player in self.players_to_include:
+            player_data = self.players.get_data(player)
+            games_played = 0
+            if self.include_new and self.games.get():
+                games_played = sum(
+                    [1 if player in self.games.get()[0]["game"]["players"] else 0]
+                )
+            if self.include_initial:
+                games_played += player_data["initial_metrics"].get("games") or 0
+            players[player][GamesMetric.KEY] = games_played
+            actuals[GamesMetric.KEY][player] = 0  # no points for games played
+            metrics[GamesMetric.KEY][player] = games_played
 
         # Now add initial data
         if self.include_initial:
@@ -153,20 +158,19 @@ class Stats:
             for player in players
         }
 
-        if self.include_initial:
-            additional_metrics.append("PPG")
-            data["PPG"] = {
-                player: (
-                    0
-                    if (
-                        data["Points"].get(player) is None
-                        or data["Points"].get(player) == 0
-                    )
-                    else data["Points"].get(player)
-                    / (self.stats["metrics"][GamesMetric.KEY].get(player) or 0)
+        additional_metrics.append("PPG")
+        data["PPG"] = {
+            player: (
+                0
+                if (
+                    data["Points"].get(player) is None
+                    or data["Points"].get(player) == 0
                 )
-                for player in players
-            }
+                else data["Points"].get(player)
+                / max(1, (self.stats["metrics"][GamesMetric.KEY].get(player) or 0))
+            )
+            for player in players
+        }
 
         # Display a progress bar for the next promotion
         self.points = sum([val for val in data["Points"].values()])
@@ -176,17 +180,23 @@ class Stats:
                 if metric in ["PPG", GamesMetric.KEY]:
                     continue
                 for player in players:
-                    player_vals[player] = (
-                        player_vals[player] / data[GamesMetric.KEY][player]
+                    player_vals[player] = player_vals[player] / max(
+                        1, data[GamesMetric.KEY][player]
                     )
             for metric, player_vals in data.items():
                 max_val = max([val for val in player_vals.values()])
                 if metric in ["PPG", GamesMetric.KEY]:
                     continue
                 for player in players:
-                    player_vals[player] = player_vals[player] / max_val
+                    player_vals[player] = player_vals[player] / max(1, max_val)
             del data["PPG"]
             del data[GamesMetric.KEY]
+
+        if self.subgraph:
+            if "PPG" in data:
+                del data["PPG"]
+            if GamesMetric.KEY in data:
+                del data[GamesMetric.KEY]
 
         metric_order = [*additional_metrics, *Stats.METRICS]
         valid_metrics = [

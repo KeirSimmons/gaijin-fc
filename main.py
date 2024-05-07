@@ -24,12 +24,26 @@ class Main:
 
     def show_summary(self):
         normalise = st.session_state.get("normalise_graph") or False
-        self.stats.process(normalise=normalise)
+        include = {
+            "celtic": st.session_state.get("graph_celtic") or False,
+            "rangers": st.session_state.get("graph_rangers") or False,
+        }
+        self.stats.process(
+            normalise=normalise,
+            include_new=include["rangers"],
+            include_initial=include["celtic"],
+        )
         st.markdown("**Points till next promotion!**")
         Promotions(self.stats.get_points()).display_progress_bar()
 
         st.session_state["normalise_graph"] = st.toggle("Normalise?")
-        if normalise is not st.session_state.get("normalise_graph"):
+        st.session_state["graph_celtic"] = st.toggle("Include Celtic games?")
+        st.session_state["graph_rangers"] = st.toggle("Include Rangers games?")
+        if (
+            (normalise is not st.session_state.get("normalise_graph"))
+            or (include["celtic"] is not st.session_state["graph_celtic"])
+            or (include["rangers"] is not st.session_state["graph_rangers"])
+        ):
             st.rerun()
 
     def show_commit_button(self):
