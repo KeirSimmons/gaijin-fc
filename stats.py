@@ -115,9 +115,14 @@ class Stats:
         for player in self.players_to_include:
             player_data = self.players.get_data(player)
             games_played = 0
-            if self.include_new and self.games.get():
+            player_game_data = self.games.get()
+            if self.include_new and player_game_data:
                 games_played = sum(
-                    [1 if player in self.games.get()[0]["game"]["players"] else 0]
+                    [
+                        1
+                        for game in player_game_data
+                        if player in game["game"]["players"]
+                    ]
                 )
             if self.include_initial:
                 games_played += player_data["initial_metrics"].get("games") or 0
