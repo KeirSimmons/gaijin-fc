@@ -1288,7 +1288,21 @@
         "created": 1727070406.3507547,
         "date": "2024-09-23",
         "duration": 7,
-        "matches": [],
+        "matches": [
+            {
+                "level": "Enjoy",
+                "players": {
+                    "Keir": {
+                        "MOTM": 0,
+                        "assists": 0,
+                        "conceded": 0,
+                        "disciplinary": 0,
+                        "goals": 1,
+                        "hatrick": 0
+                    }
+                }
+            }
+        ],
         "no_of_matches": 8,
         "ongoing": true,
         "players": [
