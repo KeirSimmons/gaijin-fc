@@ -52,6 +52,7 @@ class Stats:
         normalise=False,
         display=True,
         subgraph=False,
+        key=None,
     ):
         self.include_initial = include_initial
         self.include_new = include_new
@@ -62,7 +63,7 @@ class Stats:
         self.subgraph = subgraph
         self.calculate_stats()
         if display:
-            self.display()
+            self.display(key=key)
 
     def calculate_stats(self):
         """We have two scores we want to track:
@@ -149,7 +150,7 @@ class Stats:
             "metrics": metrics,
         }
 
-    def display(self):
+    def display(self, key=None):
 
         additional_metrics = ["Points"]
 
@@ -229,7 +230,10 @@ class Stats:
                 for metric in metric_order
             ]
         )
-        st.plotly_chart(fig)
+        if key is not None:
+            st.plotly_chart(fig, key=key)
+        else:
+            st.plotly_chart(fig)
         self.data = data
 
     def get_points(self):
