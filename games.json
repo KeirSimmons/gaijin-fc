@@ -2027,7 +2027,29 @@
         "created": 1746501404.5057642,
         "date": "2025-05-05",
         "duration": 7,
-        "matches": [],
+        "matches": [
+            {
+                "level": "Enjoy",
+                "players": {
+                    "Liam": {
+                        "MOTM": 0,
+                        "assists": 1,
+                        "conceded": 1,
+                        "disciplinary": 0,
+                        "goals": 1,
+                        "hatrick": 0
+                    },
+                    "Rory": {
+                        "MOTM": 0,
+                        "assists": 1,
+                        "conceded": 0,
+                        "disciplinary": 0,
+                        "goals": 2,
+                        "hatrick": 0
+                    }
+                }
+            }
+        ],
         "no_of_matches": 8,
         "ongoing": true,
         "players": [
