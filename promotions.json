@@ -10,5 +10,9 @@
     {
         "team": "Brighton",
         "points": 250
+    },
+    {
+        "team": "Darkton",
+        "points": 500
     }
 ]
