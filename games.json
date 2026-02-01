@@ -2865,6 +2865,35 @@
                         "hatrick": 0
                     }
                 }
+            },
+            {
+                "level": "Enjoy",
+                "players": {
+                    "Keir": {
+                        "MOTM": 0,
+                        "assists": 0,
+                        "conceded": 0,
+                        "disciplinary": 0,
+                        "goals": 1,
+                        "hatrick": 0
+                    },
+                    "Liam": {
+                        "MOTM": 0,
+                        "assists": 0,
+                        "conceded": 0,
+                        "disciplinary": 0,
+                        "goals": 0,
+                        "hatrick": 0
+                    },
+                    "Rory": {
+                        "MOTM": 0,
+                        "assists": 1,
+                        "conceded": 0,
+                        "disciplinary": 0,
+                        "goals": 0,
+                        "hatrick": 0
+                    }
+                }
             }
         ],
         "no_of_matches": 8,
